@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Plus, Trash2, ChevronRight } from 'lucide-react';
+import { Plus, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getPropostas, createProposta, deleteProposta } from '../api/propostas';
-import { createProprietario, getProprietario } from '../api/proprietarios';
+import { getPropostas, createProposta } from '../api/propostas';
+import { createProprietario, getProprietario, getProprietarioByCpf } from '../api/proprietarios';
 import { createVeiculo, getVeiculo } from '../api/veiculos';
 import type { Proposta, Proprietario, Veiculo, PagedResult, StatusProposta } from '../types';
 import Modal from '../components/Modal';
@@ -63,7 +63,6 @@ export default function Propostas() {
   const [proprietarioMap, setProprietarioMap] = useState<Record<number, Proprietario>>({});
   const [veiculoMap, setVeiculoMap] = useState<Record<number, Veiculo>>({});
   const [createModal, setCreateModal] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<Proposta | null>(null);
   const [error, setError] = useState('');
 
   const { user } = useAuth();
@@ -110,7 +109,8 @@ export default function Propostas() {
   async function onCreateSubmit(data: CreateForm) {
     setError('');
     try {
-      const proprietario = await createProprietario({ nome: data.propNome, cpf: data.propCpf, telefone: data.propTelefone, email: data.propEmail });
+      const proprietario = await getProprietarioByCpf(data.propCpf).catch(() => null)
+        ?? await createProprietario({ nome: data.propNome, cpf: data.propCpf, telefone: data.propTelefone, email: data.propEmail });
       const veiculo = await createVeiculo({ placa: data.veicPlaca, marca: data.veicMarca, modelo: data.veicModelo, anoFab: Number(data.veicAnoFab), anoMod: Number(data.veicAnoMod), chassi: data.veicChassi, renavam: data.veicRenavam, cor: data.veicCor, status: 'Ativo' });
       await createProposta({ sessaoProposta: data.sessaoProposta, status: data.propStatus, id_usuario: user!.id, id_veiculo: veiculo.id_veiculo, id_proprietario: proprietario.id_proprietario });
       setCreateModal(false);
@@ -119,13 +119,6 @@ export default function Propostas() {
       const msg = (e as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
       setError(msg ?? 'Erro ao criar proposta.');
     }
-  }
-
-  async function confirmDelete() {
-    if (!deleteTarget) return;
-    await deleteProposta(deleteTarget.id_proposta);
-    setDeleteTarget(null);
-    load();
   }
 
   return (
@@ -169,13 +162,7 @@ export default function Propostas() {
                 </td>
                 <td className="px-4 py-3 text-gray-500">{new Date(p.dataCriacao).toLocaleDateString('pt-BR')}</td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); setDeleteTarget(p); }}
-                      className="text-gray-400 hover:text-red-600 transition"
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                  <div className="flex items-center justify-end">
                     <ChevronRight size={15} className="text-gray-300 pointer-events-none" />
                   </div>
                 </td>
@@ -267,15 +254,6 @@ export default function Propostas() {
         </Modal>
       )}
 
-      {deleteTarget && (
-        <Modal title="Confirmar exclusão" onClose={() => setDeleteTarget(null)}>
-          <p className="text-gray-600 mb-6">Deseja excluir a proposta <strong>{deleteTarget.sessaoProposta}</strong>?</p>
-          <div className="flex gap-2 justify-end">
-            <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">Cancelar</button>
-            <button onClick={confirmDelete} className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700">Excluir</button>
-          </div>
-        </Modal>
-      )}
     </div>
   );
 }

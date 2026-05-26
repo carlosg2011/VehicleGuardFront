@@ -9,6 +9,9 @@ export const getProprietarios = (page = 1, pageSize = 10) =>
 export const getProprietario = (id: number) =>
   api.get<Proprietario>(`/proprietario/${id}`).then((r) => r.data);
 
+export const getProprietarioByCpf = (cpf: string) =>
+  api.get<Proprietario>(`/proprietario/cpf/${encodeURIComponent(cpf)}`).then((r) => r.data);
+
 export const createProprietario = (data: {
   nome: string;
   cpf: string;
