@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ClipboardCheck, Eye, FileText } from 'lucide-react';
+import { ArrowLeft, ClipboardCheck, Eye, FileText, ScrollText } from 'lucide-react';
 import { getProposta } from '../api/propostas';
 import { getProprietario } from '../api/proprietarios';
 import { getVeiculo } from '../api/veiculos';
 import { createVistoria, updateVistoria, getVistorias } from '../api/vistorias';
-import { createTermo } from '../api/termos';
-import type { Proposta, Proprietario, Veiculo, Vistoria } from '../types';
+import { createTermo, getTermoPorProposta } from '../api/termos';
+import type { Proposta, Proprietario, Veiculo, Vistoria, Termo } from '../types';
 import Modal from '../components/Modal';
 import StatusBadge from '../components/StatusBadge';
 import { useAuth } from '../contexts/AuthContext';
@@ -29,6 +29,7 @@ export default function PropostaDetalhe() {
   const [proprietario, setProprietario] = useState<Proprietario | null>(null);
   const [veiculo, setVeiculo] = useState<Veiculo | null>(null);
   const [vistoria, setVistoria] = useState<Vistoria | null>(null);
+  const [termo, setTermo] = useState<Termo | null>(null);
   const [loading, setLoading] = useState(true);
   const [confirmModal, setConfirmModal] = useState(false);
   const [dadosModal, setDadosModal] = useState(false);
@@ -42,15 +43,17 @@ export default function PropostaDetalhe() {
     setLoading(true);
     try {
       const p = await getProposta(Number(id));
-      const [prop, veic, vistorias] = await Promise.all([
+      const [prop, veic, vistorias, termoAtivo] = await Promise.all([
         getProprietario(p.id_proprietario),
         getVeiculo(p.id_veiculo),
         getVistorias(1, 10, undefined, p.id_proposta, true),
+        getTermoPorProposta(p.id_proposta).catch(() => null),
       ]);
       setProposta(p);
       setProprietario(prop);
       setVeiculo(veic);
       setVistoria(vistorias.items.find(v => v.status !== 'Cancelada') ?? null);
+      setTermo(termoAtivo);
     } finally {
       setLoading(false);
     }
@@ -103,20 +106,21 @@ export default function PropostaDetalhe() {
     if (!proposta) return;
     setGerandoTermo(true);
     try {
-      await createTermo({
+      const novoTermo = await createTermo({
         numeroTermo: `TERMO-${proposta.sessaoProposta}`,
         status: 'Ativo',
         dataEnvio: new Date().toISOString(),
         dataAssinatura: null,
         id_proposta: proposta.id_proposta,
       });
-      navigate('/termos');
+      setTermo(novoTermo);
     } catch {
       setError('Erro ao gerar termo. Tente novamente.');
     } finally {
       setGerandoTermo(false);
     }
   }
+
 
   if (loading) {
     return (
@@ -146,7 +150,15 @@ export default function PropostaDetalhe() {
           Voltar
         </button>
         <div className="flex items-center gap-2">
-          {proposta.status === 'Aprovada' && (
+          {termo ? (
+            <button
+              onClick={() => navigate(`/termos/${termo.id_termo}`)}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+            >
+              <ScrollText size={16} />
+              Ver Termo
+            </button>
+          ) : proposta.status === 'Aprovada' && (
             <button
               onClick={handleGerarTermo}
               disabled={gerandoTermo}

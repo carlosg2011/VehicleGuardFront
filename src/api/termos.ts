@@ -7,6 +7,9 @@ export const getTermos = (page = 1, pageSize = 10, userId?: number) =>
 export const getTermo = (id: number) =>
   api.get<Termo>(`/termos/${id}`).then((r) => r.data);
 
+export const getTermoPorProposta = (idProposta: number) =>
+  api.get<Termo>(`/termos/proposta/${idProposta}`).then((r) => r.data);
+
 export const createTermo = (data: {
   numeroTermo: string;
   status: StatusTermo;

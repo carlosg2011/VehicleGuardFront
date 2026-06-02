@@ -52,7 +52,7 @@ export default function Vistorias() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [searchParams] = useSearchParams();
 
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 60_000);
@@ -66,7 +66,7 @@ export default function Vistorias() {
   }, []);
 
   async function load() {
-    setResult(await getVistorias(page, 10, isAdmin ? undefined : user?.id));
+    setResult(await getVistorias(page, 10, user?.id));
   }
 
   useEffect(() => { load(); }, [page]);

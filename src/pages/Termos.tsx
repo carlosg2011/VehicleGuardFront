@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 import { getTermos } from '../api/termos';
 import type { Termo, PagedResult } from '../types';
 import Pagination from '../components/Pagination';
@@ -6,13 +8,14 @@ import StatusBadge from '../components/StatusBadge';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Termos() {
+  const navigate = useNavigate();
   const [result, setResult] = useState<PagedResult<Termo> | null>(null);
   const [page, setPage] = useState(1);
 
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
 
   async function load() {
-    setResult(await getTermos(page, 10, isAdmin ? undefined : user?.id));
+    setResult(await getTermos(page, 10, user?.id));
   }
 
   useEffect(() => { load(); }, [page]);
@@ -32,20 +35,30 @@ export default function Termos() {
               <th className="text-left px-4 py-3 font-medium text-gray-600">Envio</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Assinatura</th>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Proposta</th>
+              <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
             {result?.items.map((t) => (
-              <tr key={t.id_termo} className="border-b border-gray-50 hover:bg-gray-50">
+              <tr
+                key={t.id_termo}
+                onClick={() => navigate(`/termos/${t.id_termo}`)}
+                className="border-b border-gray-50 hover:bg-blue-50 cursor-pointer"
+              >
                 <td className="px-4 py-3 font-mono font-medium text-gray-900">{t.numeroTermo}</td>
                 <td className="px-4 py-3"><StatusBadge status={t.status} /></td>
                 <td className="px-4 py-3 text-gray-600">{new Date(t.dataEnvio).toLocaleDateString('pt-BR')}</td>
                 <td className="px-4 py-3 text-gray-600">{t.dataAssinatura ? new Date(t.dataAssinatura).toLocaleDateString('pt-BR') : '—'}</td>
                 <td className="px-4 py-3 text-gray-600">#{t.id_proposta}</td>
+                <td className="px-4 py-3">
+                  <div className="flex items-center justify-end">
+                    <ChevronRight size={15} className="text-gray-300 pointer-events-none" />
+                  </div>
+                </td>
               </tr>
             ))}
             {result?.items.length === 0 && (
-              <tr><td colSpan={5} className="text-center py-8 text-gray-400">Nenhum termo encontrado.</td></tr>
+              <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhum termo encontrado.</td></tr>
             )}
           </tbody>
         </table>

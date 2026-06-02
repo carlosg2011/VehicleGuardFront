@@ -23,15 +23,14 @@ const cards: Card[] = [
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [recent, setRecent] = useState<Proposta[]>([]);
 
   useEffect(() => {
-    const uid = isAdmin ? undefined : user?.id;
-    getDashboard(uid).then(setSummary);
-    getPropostas(1, 5, uid).then((r) => setRecent(r.items));
-  }, [user, isAdmin]);
+    getDashboard(user?.id).then(setSummary);
+    getPropostas(1, 5, user?.id).then((r) => setRecent(r.items));
+  }, [user]);
 
   return (
     <div>

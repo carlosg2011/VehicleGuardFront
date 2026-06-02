@@ -1,7 +1,7 @@
 export type StatusVeiculo = 'Ativo' | 'Inativo' | 'Bloqueado';
 export type StatusProposta = 'Pendente' | 'EmAnalise' | 'Aprovada' | 'Recusada' | 'Cancelada';
 export type StatusVistoria = 'NaoIniciada' | 'Pendente' | 'Concluida' | 'Aprovada' | 'Recusada' | 'Cancelada' | 'Expirada';
-export type StatusTermo = 'Ativo' | 'Expirado' | 'Cancelado';
+export type StatusTermo = 'Ativo' | 'Assinado' | 'Expirado' | 'Cancelado';
 
 export interface Usuario {
   id_usuario: number;

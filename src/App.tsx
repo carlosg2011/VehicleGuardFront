@@ -11,7 +11,9 @@ import Propostas from './pages/Propostas';
 import PropostaDetalhe from './pages/PropostaDetalhe';
 import Vistorias from './pages/Vistorias';
 import Termos from './pages/Termos';
+import TermoDetalhe from './pages/TermoDetalhe';
 import PropostasAdmin from './pages/PropostasAdmin';
+import Relatorios from './pages/Relatorios';
 
 export default function App() {
   return (
@@ -34,7 +36,9 @@ export default function App() {
             <Route path="propostas/:id" element={<PropostaDetalhe />} />
             <Route path="vistorias" element={<Vistorias />} />
             <Route path="termos" element={<Termos />} />
+            <Route path="termos/:id" element={<TermoDetalhe />} />
             <Route path="propostas-admin" element={<PropostasAdmin />} />
+            <Route path="relatorios" element={<Relatorios />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>
