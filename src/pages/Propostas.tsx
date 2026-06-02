@@ -11,6 +11,7 @@ import StatusBadge from '../components/StatusBadge';
 import MaskedInput, { Masks } from '../components/MaskedInput';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
+import { validateCpfCnpj } from '../utils/validators';
 
 interface CreateForm {
   sessaoProposta: string;
@@ -196,7 +197,7 @@ export default function Propostas() {
                   <input {...createForm.register('propNome', { required: 'Obrigatório' })} className={inputCls} placeholder="Nome completo" />
                 </Field>
                 <Field label="CPF / CNPJ" error={createForm.formState.errors.propCpf?.message}>
-                  <MaskedInput control={control} name="propCpf" mask={Masks.cpfCnpj} rules={{ required: 'Obrigatório' }} placeholder="000.000.000-00" />
+                  <MaskedInput control={control} name="propCpf" mask={Masks.cpfCnpj} rules={{ required: 'Obrigatório', validate: validateCpfCnpj }} placeholder="000.000.000-00" />
                 </Field>
                 <Field label="Telefone">
                   <MaskedInput control={control} name="propTelefone" mask={Masks.telefone} placeholder="(00) 00000-0000" />
