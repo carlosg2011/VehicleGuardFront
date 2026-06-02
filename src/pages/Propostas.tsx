@@ -9,9 +9,11 @@ import Modal from '../components/Modal';
 import Pagination from '../components/Pagination';
 import StatusBadge from '../components/StatusBadge';
 import MaskedInput, { Masks } from '../components/MaskedInput';
+import FipeCombobox, { type ComboOption } from '../components/FipeCombobox';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../contexts/AuthContext';
 import { validateCpfCnpj } from '../utils/validators';
+import { getMarcas, getModelos, getAnos, type FipeTipo } from '../api/fipe';
 
 interface CreateForm {
   sessaoProposta: string;
@@ -57,6 +59,12 @@ function generateCode() {
   return `PROP-${year}-${rand}`;
 }
 
+const TIPOS: { value: FipeTipo; label: string }[] = [
+  { value: 'carros', label: 'Carros' },
+  { value: 'motos', label: 'Motos' },
+  { value: 'caminhoes', label: 'Caminhões' },
+];
+
 export default function Propostas() {
   const navigate = useNavigate();
   const [result, setResult] = useState<PagedResult<Proposta> | null>(null);
@@ -70,6 +78,18 @@ export default function Propostas() {
   const { user } = useAuth();
   const createForm = useForm<CreateForm>();
   const { control } = createForm;
+
+  const [fipeTipo, setFipeTipo] = useState<FipeTipo>('carros');
+  const [marcas, setMarcas] = useState<ComboOption[]>([]);
+  const [modelos, setModelos] = useState<ComboOption[]>([]);
+  const [anos, setAnos] = useState<ComboOption[]>([]);
+  const [loadingMarcas, setLoadingMarcas] = useState(false);
+  const [loadingModelos, setLoadingModelos] = useState(false);
+  const [loadingAnos, setLoadingAnos] = useState(false);
+  const [selectedMarcaNome, setSelectedMarcaNome] = useState('');
+  const [selectedMarcaCode, setSelectedMarcaCode] = useState('');
+  const [selectedModeloNome, setSelectedModeloNome] = useState('');
+  const [selectedAno, setSelectedAno] = useState('');
 
   async function load() {
     setLoading(true);
@@ -99,6 +119,75 @@ export default function Propostas() {
 
   useEffect(() => { load(); }, [page]);
 
+  useEffect(() => {
+    setLoadingMarcas(true);
+    setMarcas([]);
+    getMarcas(fipeTipo)
+      .then((data) => setMarcas(data.map((m) => ({ value: m.codigo, label: m.nome }))))
+      .catch(() => {})
+      .finally(() => setLoadingMarcas(false));
+  }, [fipeTipo]);
+
+  function resetFipeSelection() {
+    setSelectedMarcaNome('');
+    setSelectedMarcaCode('');
+    setSelectedModeloNome('');
+    setSelectedAno('');
+    setModelos([]);
+    setAnos([]);
+  }
+
+  function onTipoChange(tipo: FipeTipo) {
+    setFipeTipo(tipo);
+    resetFipeSelection();
+    createForm.setValue('veicMarca', '');
+    createForm.setValue('veicModelo', '');
+    createForm.setValue('veicAnoMod', 0);
+  }
+
+  async function onMarcaSelect(opt: ComboOption) {
+    setSelectedMarcaNome(opt.label);
+    setSelectedMarcaCode(opt.value);
+    setSelectedModeloNome('');
+    setSelectedAno('');
+    setModelos([]);
+    setAnos([]);
+    createForm.setValue('veicMarca', opt.label, { shouldValidate: true });
+    createForm.setValue('veicModelo', '');
+    createForm.setValue('veicAnoMod', 0);
+    setLoadingModelos(true);
+    try {
+      const res = await getModelos(fipeTipo, opt.value);
+      setModelos(res.modelos.map((m) => ({ value: String(m.codigo), label: m.nome })));
+    } catch {
+    } finally {
+      setLoadingModelos(false);
+    }
+  }
+
+  async function onModeloSelect(opt: ComboOption) {
+    setSelectedModeloNome(opt.label);
+    setSelectedAno('');
+    setAnos([]);
+    createForm.setValue('veicModelo', opt.label, { shouldValidate: true });
+    createForm.setValue('veicAnoMod', 0);
+    setLoadingAnos(true);
+    try {
+      const res = await getAnos(fipeTipo, selectedMarcaCode, parseInt(opt.value));
+      setAnos(res.map((a) => ({ value: a.codigo, label: a.nome })));
+    } catch {
+    } finally {
+      setLoadingAnos(false);
+    }
+  }
+
+  function onAnoSelect(opt: ComboOption) {
+    setSelectedAno(opt.label);
+    const year = parseInt(opt.label);
+    createForm.setValue('veicAnoMod', year, { shouldValidate: true });
+    createForm.setValue('veicAnoFab', year);
+  }
+
   function openCreate() {
     createForm.reset({
       sessaoProposta: generateCode(),
@@ -106,9 +195,10 @@ export default function Propostas() {
       propNome: '', propCpf: '', propTelefone: '', propEmail: '',
       veicPlaca: '', veicMarca: '', veicModelo: '',
       veicAnoFab: new Date().getFullYear(),
-      veicAnoMod: new Date().getFullYear(),
+      veicAnoMod: 0,
       veicChassi: '', veicRenavam: '', veicCor: '',
     });
+    resetFipeSelection();
     setCreateModal(true);
     setError('');
   }
@@ -142,46 +232,46 @@ export default function Propostas() {
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
-        <table className="w-full text-sm min-w-[560px]">
-          <thead className="bg-gray-50 border-b border-gray-100">
-            <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Código</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Proprietário</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Veículo</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Criação</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan={6} className="text-center py-10 text-gray-400">Carregando...</td></tr>
-            ) : result?.items.length === 0 ? (
-              <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhuma proposta encontrada.</td></tr>
-            ) : result?.items.map((p) => (
-              <tr
-                key={p.id_proposta}
-                onClick={() => navigate(`/propostas/${p.id_proposta}`)}
-                className="border-b border-gray-50 hover:bg-blue-50 cursor-pointer"
-              >
-                <td className="px-4 py-3 font-mono font-medium text-gray-900">{p.sessaoProposta}</td>
-                <td className="px-4 py-3"><StatusBadge status={p.status} /></td>
-                <td className="px-4 py-3 text-gray-700">{proprietarioMap[p.id_proprietario]?.nome ?? `#${p.id_proprietario}`}</td>
-                <td className="px-4 py-3 text-gray-700">
-                  {veiculoMap[p.id_veiculo]
-                    ? `${veiculoMap[p.id_veiculo].placa} — ${veiculoMap[p.id_veiculo].modelo}`
-                    : `#${p.id_veiculo}`}
-                </td>
-                <td className="px-4 py-3 text-gray-500">{new Date(p.dataCriacao).toLocaleDateString('pt-BR')}</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center justify-end">
-                    <ChevronRight size={15} className="text-gray-300 pointer-events-none" />
-                  </div>
-                </td>
+          <table className="w-full text-sm min-w-[560px]">
+            <thead className="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Código</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Proprietário</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Veículo</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Criação</th>
+                <th className="px-4 py-3" />
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={6} className="text-center py-10 text-gray-400">Carregando...</td></tr>
+              ) : result?.items.length === 0 ? (
+                <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhuma proposta encontrada.</td></tr>
+              ) : result?.items.map((p) => (
+                <tr
+                  key={p.id_proposta}
+                  onClick={() => navigate(`/propostas/${p.id_proposta}`)}
+                  className="border-b border-gray-50 hover:bg-blue-50 cursor-pointer"
+                >
+                  <td className="px-4 py-3 font-mono font-medium text-gray-900">{p.sessaoProposta}</td>
+                  <td className="px-4 py-3"><StatusBadge status={p.status} /></td>
+                  <td className="px-4 py-3 text-gray-700">{proprietarioMap[p.id_proprietario]?.nome ?? `#${p.id_proprietario}`}</td>
+                  <td className="px-4 py-3 text-gray-700">
+                    {veiculoMap[p.id_veiculo]
+                      ? `${veiculoMap[p.id_veiculo].placa} — ${veiculoMap[p.id_veiculo].modelo}`
+                      : `#${p.id_veiculo}`}
+                  </td>
+                  <td className="px-4 py-3 text-gray-500">{new Date(p.dataCriacao).toLocaleDateString('pt-BR')}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center justify-end">
+                      <ChevronRight size={15} className="text-gray-300 pointer-events-none" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -210,6 +300,24 @@ export default function Propostas() {
 
             <div>
               <SectionTitle>Veículo</SectionTitle>
+
+              <div className="flex gap-2 mb-3">
+                {TIPOS.map((t) => (
+                  <button
+                    key={t.value}
+                    type="button"
+                    onClick={() => onTipoChange(t.value)}
+                    className={`px-3 py-1 text-xs rounded-full border font-medium transition ${
+                      fipeTipo === t.value
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'text-gray-600 border-gray-300 hover:border-blue-400'
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <Field label="Placa" error={createForm.formState.errors.veicPlaca?.message}>
                   <input
@@ -221,16 +329,43 @@ export default function Propostas() {
                   />
                 </Field>
                 <Field label="Marca" error={createForm.formState.errors.veicMarca?.message}>
-                  <input {...createForm.register('veicMarca', { required: 'Obrigatório' })} className={inputCls} placeholder="Toyota" />
+                  <input type="hidden" {...createForm.register('veicMarca', { required: 'Obrigatório' })} />
+                  <FipeCombobox
+                    options={marcas}
+                    value={selectedMarcaNome}
+                    onSelect={onMarcaSelect}
+                    loading={loadingMarcas}
+                    placeholder="Selecione a marca"
+                  />
                 </Field>
                 <Field label="Modelo" error={createForm.formState.errors.veicModelo?.message}>
-                  <input {...createForm.register('veicModelo', { required: 'Obrigatório' })} className={inputCls} placeholder="Corolla" />
+                  <input type="hidden" {...createForm.register('veicModelo', { required: 'Obrigatório' })} />
+                  <FipeCombobox
+                    options={modelos}
+                    value={selectedModeloNome}
+                    onSelect={onModeloSelect}
+                    loading={loadingModelos}
+                    disabled={!selectedMarcaNome}
+                    placeholder={selectedMarcaNome ? 'Selecione o modelo' : 'Selecione a marca primeiro'}
+                  />
                 </Field>
                 <Field label="Ano Fabricação" error={createForm.formState.errors.veicAnoFab?.message}>
-                  <input type="number" {...createForm.register('veicAnoFab', { required: 'Obrigatório', min: { value: 1900, message: 'Inválido' } })} className={inputCls} />
+                  <input
+                    type="number"
+                    {...createForm.register('veicAnoFab', { required: 'Obrigatório', min: { value: 1900, message: 'Inválido' }, valueAsNumber: true })}
+                    className={inputCls}
+                  />
                 </Field>
                 <Field label="Ano Modelo" error={createForm.formState.errors.veicAnoMod?.message}>
-                  <input type="number" {...createForm.register('veicAnoMod', { required: 'Obrigatório', min: { value: 1900, message: 'Inválido' } })} className={inputCls} />
+                  <input type="hidden" {...createForm.register('veicAnoMod', { validate: (v) => v >= 1900 || 'Selecione o ano modelo' })} />
+                  <FipeCombobox
+                    options={anos}
+                    value={selectedAno}
+                    onSelect={onAnoSelect}
+                    loading={loadingAnos}
+                    disabled={!selectedModeloNome}
+                    placeholder={selectedModeloNome ? 'Selecione o ano' : 'Selecione o modelo primeiro'}
+                  />
                 </Field>
                 <Field label="Cor">
                   <input {...createForm.register('veicCor')} className={inputCls} placeholder="Prata" />
@@ -263,7 +398,6 @@ export default function Propostas() {
           </form>
         </Modal>
       )}
-
     </div>
   );
 }
