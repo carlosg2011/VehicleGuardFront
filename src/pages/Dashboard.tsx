@@ -26,10 +26,27 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [recent, setRecent] = useState<Proposta[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getDashboard(user?.id).then(setSummary);
-    getPropostas(1, 5, user?.id).then((r) => setRecent(r.items));
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const [s, r] = await Promise.all([
+          getDashboard(user?.id),
+          getPropostas(1, 5, user?.id),
+        ]);
+        if (!cancelled) {
+          setSummary(s);
+          setRecent(r.items);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => { cancelled = true; };
   }, [user]);
 
   return (
@@ -47,7 +64,7 @@ export default function Dashboard() {
               <Icon size={22} className="text-white" />
             </div>
             <p className="text-2xl font-bold text-gray-900">
-              {summary ? summary[key] : '—'}
+              {loading ? '...' : summary ? summary[key] : '—'}
             </p>
             <p className="text-xs font-medium text-gray-500 text-center">{label}</p>
           </div>
@@ -58,7 +75,9 @@ export default function Dashboard() {
         <div className="px-5 py-4 border-b border-gray-100">
           <h2 className="text-sm font-semibold text-gray-700">Atividades Recentes</h2>
         </div>
-        {recent.length === 0 ? (
+        {loading ? (
+          <p className="text-center py-8 text-gray-400 text-sm">Carregando...</p>
+        ) : recent.length === 0 ? (
           <p className="text-center py-8 text-gray-400 text-sm">Nenhuma atividade recente.</p>
         ) : (
           <ul className="divide-y divide-gray-50">

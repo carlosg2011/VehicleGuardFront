@@ -44,6 +44,7 @@ function PrazoCell({ dataSolicitacao, status, now }: { dataSolicitacao: string; 
 export default function Vistorias() {
   const [result, setResult] = useState<PagedResult<Vistoria> | null>(null);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [inspectTarget, setInspectTarget] = useState<Vistoria | null>(null);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [confirming, setConfirming] = useState(false);
@@ -66,7 +67,12 @@ export default function Vistorias() {
   }, []);
 
   async function load() {
-    setResult(await getVistorias(page, 10, user?.id));
+    setLoading(true);
+    try {
+      setResult(await getVistorias(page, 10, user?.id));
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { load(); }, [page]);
@@ -141,7 +147,11 @@ export default function Vistorias() {
             </tr>
           </thead>
           <tbody>
-            {result?.items.map((v) => (
+            {loading ? (
+              <tr><td colSpan={7} className="text-center py-10 text-gray-400">Carregando...</td></tr>
+            ) : result?.items.length === 0 ? (
+              <tr><td colSpan={7} className="text-center py-8 text-gray-400">Nenhuma vistoria encontrada.</td></tr>
+            ) : result?.items.map((v) => (
               <tr
                 key={v.id_vistoria}
                 onClick={() => openInspect(v)}
@@ -158,9 +168,6 @@ export default function Vistorias() {
                 </td>
               </tr>
             ))}
-            {result?.items.length === 0 && (
-              <tr><td colSpan={7} className="text-center py-8 text-gray-400">Nenhuma vistoria encontrada.</td></tr>
-            )}
           </tbody>
         </table>
       </div>

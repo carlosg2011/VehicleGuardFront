@@ -63,6 +63,7 @@ export default function Propostas() {
   const [proprietarioMap, setProprietarioMap] = useState<Record<number, Proprietario>>({});
   const [veiculoMap, setVeiculoMap] = useState<Record<number, Veiculo>>({});
   const [createModal, setCreateModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const { user } = useAuth();
@@ -70,24 +71,29 @@ export default function Propostas() {
   const { control } = createForm;
 
   async function load() {
-    const data = await getPropostas(page, 10, user?.id);
-    setResult(data);
+    setLoading(true);
+    try {
+      const data = await getPropostas(page, 10, user?.id);
+      setResult(data);
 
-    const propIds = [...new Set(data.items.map((p) => p.id_proprietario))];
-    const veicIds = [...new Set(data.items.map((p) => p.id_veiculo))];
+      const propIds = [...new Set(data.items.map((p) => p.id_proprietario))];
+      const veicIds = [...new Set(data.items.map((p) => p.id_veiculo))];
 
-    const [props, veics] = await Promise.all([
-      Promise.all(propIds.map((id) => getProprietario(id).catch(() => null))),
-      Promise.all(veicIds.map((id) => getVeiculo(id).catch(() => null))),
-    ]);
+      const [props, veics] = await Promise.all([
+        Promise.all(propIds.map((id) => getProprietario(id).catch(() => null))),
+        Promise.all(veicIds.map((id) => getVeiculo(id).catch(() => null))),
+      ]);
 
-    const pm: Record<number, Proprietario> = {};
-    props.forEach((p) => { if (p) pm[p.id_proprietario] = p; });
-    const vm: Record<number, Veiculo> = {};
-    veics.forEach((v) => { if (v) vm[v.id_veiculo] = v; });
+      const pm: Record<number, Proprietario> = {};
+      props.forEach((p) => { if (p) pm[p.id_proprietario] = p; });
+      const vm: Record<number, Veiculo> = {};
+      veics.forEach((v) => { if (v) vm[v.id_veiculo] = v; });
 
-    setProprietarioMap(pm);
-    setVeiculoMap(vm);
+      setProprietarioMap(pm);
+      setVeiculoMap(vm);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { load(); }, [page]);
@@ -146,7 +152,11 @@ export default function Propostas() {
             </tr>
           </thead>
           <tbody>
-            {result?.items.map((p) => (
+            {loading ? (
+              <tr><td colSpan={6} className="text-center py-10 text-gray-400">Carregando...</td></tr>
+            ) : result?.items.length === 0 ? (
+              <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhuma proposta encontrada.</td></tr>
+            ) : result?.items.map((p) => (
               <tr
                 key={p.id_proposta}
                 onClick={() => navigate(`/propostas/${p.id_proposta}`)}
@@ -168,9 +178,6 @@ export default function Propostas() {
                 </td>
               </tr>
             ))}
-            {result?.items.length === 0 && (
-              <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhuma proposta encontrada.</td></tr>
-            )}
           </tbody>
         </table>
       </div>

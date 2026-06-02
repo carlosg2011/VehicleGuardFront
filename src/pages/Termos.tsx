@@ -11,11 +11,17 @@ export default function Termos() {
   const navigate = useNavigate();
   const [result, setResult] = useState<PagedResult<Termo> | null>(null);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
 
   async function load() {
-    setResult(await getTermos(page, 10, user?.id));
+    setLoading(true);
+    try {
+      setResult(await getTermos(page, 10, user?.id));
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => { load(); }, [page]);
@@ -39,7 +45,11 @@ export default function Termos() {
             </tr>
           </thead>
           <tbody>
-            {result?.items.map((t) => (
+            {loading ? (
+              <tr><td colSpan={6} className="text-center py-10 text-gray-400">Carregando...</td></tr>
+            ) : result?.items.length === 0 ? (
+              <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhum termo encontrado.</td></tr>
+            ) : result?.items.map((t) => (
               <tr
                 key={t.id_termo}
                 onClick={() => navigate(`/termos/${t.id_termo}`)}
@@ -57,9 +67,6 @@ export default function Termos() {
                 </td>
               </tr>
             ))}
-            {result?.items.length === 0 && (
-              <tr><td colSpan={6} className="text-center py-8 text-gray-400">Nenhum termo encontrado.</td></tr>
-            )}
           </tbody>
         </table>
       </div>
