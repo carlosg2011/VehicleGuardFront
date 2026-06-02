@@ -33,7 +33,8 @@ export default function Termos() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[520px]">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Número</th>
@@ -69,6 +70,7 @@ export default function Termos() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {result && <Pagination page={page} totalPages={result.totalPages} onPageChange={setPage} />}

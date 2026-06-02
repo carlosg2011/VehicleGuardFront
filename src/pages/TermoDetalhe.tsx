@@ -130,7 +130,7 @@ export default function TermoDetalhe() {
 
   return (
     <div className="max-w-3xl">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
         <button
           onClick={() => navigate('/termos')}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition"
@@ -164,7 +164,7 @@ export default function TermoDetalhe() {
         {proposta && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proposta</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="Código" value={proposta.sessaoProposta} />
               <InfoRow label="Status" value={proposta.status} />
               <InfoRow label="Criação" value={new Date(proposta.dataCriacao).toLocaleDateString('pt-BR')} />
@@ -175,7 +175,7 @@ export default function TermoDetalhe() {
         {proprietario && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proprietário</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <InfoRow label="Nome" value={proprietario.nome} />
               <InfoRow label="CPF / CNPJ" value={proprietario.cpf} />
               <InfoRow label="Telefone" value={proprietario.telefone} />
@@ -187,7 +187,7 @@ export default function TermoDetalhe() {
         {veiculo && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Veículo</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="Placa" value={veiculo.placa} />
               <InfoRow label="Marca" value={veiculo.marca} />
               <InfoRow label="Modelo" value={veiculo.modelo} />
@@ -204,7 +204,7 @@ export default function TermoDetalhe() {
         {vistoria && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Vistoria</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="ID" value={`#${vistoria.id_vistoria}`} />
               <InfoRow label="Status" value={vistoria.status} />
               <InfoRow label="Solicitação" value={new Date(vistoria.dataSolicitacao).toLocaleDateString('pt-BR')} />
@@ -217,7 +217,7 @@ export default function TermoDetalhe() {
         {mostrarAssinaturas && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
             <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Assinaturas</h2>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <SignatureCard
                 title="Proprietário"
                 name={proprietario?.nome ?? '—'}

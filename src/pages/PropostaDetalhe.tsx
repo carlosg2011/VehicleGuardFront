@@ -141,7 +141,7 @@ export default function PropostaDetalhe() {
 
   return (
     <div className="max-w-3xl">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
         <button
           onClick={() => navigate('/propostas')}
           className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition"
@@ -202,7 +202,7 @@ export default function PropostaDetalhe() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
           <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proprietário</h2>
           {proprietario ? (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <InfoRow label="Nome" value={proprietario.nome} />
               <InfoRow label="CPF / CNPJ" value={proprietario.cpf} />
               <InfoRow label="Telefone" value={proprietario.telefone} />
@@ -216,7 +216,7 @@ export default function PropostaDetalhe() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
           <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Veículo</h2>
           {veiculo ? (
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="Placa" value={veiculo.placa} />
               <InfoRow label="Marca" value={veiculo.marca} />
               <InfoRow label="Modelo" value={veiculo.modelo} />
@@ -256,7 +256,7 @@ export default function PropostaDetalhe() {
           {error && (
             <p className="text-sm text-red-600 bg-red-50 rounded px-3 py-2 mb-4">{error}</p>
           )}
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 mb-6">
             <InfoRow label="ID" value={`#${vistoria.id_vistoria}`} />
             <InfoRow label="Proposta" value={vistoria.sessaoProposta} />
             <InfoRow label="Status" value={vistoria.status} />

@@ -52,7 +52,6 @@ export default function PropostasAdmin() {
   });
   const [aplicados, setAplicados] = useState<Filtros>(filtros);
 
-  // Estado do modal de edição de veículo
   const [veiculoEditando, setVeiculoEditando] = useState<Veiculo | null>(null);
   const [form, setForm] = useState<FormVeiculo | null>(null);
   const [loadingModal, setLoadingModal] = useState(false);
@@ -222,75 +221,76 @@ export default function PropostasAdmin() {
             {erro}
           </div>
         )}
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-100">
-            <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Usuário</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Proprietário</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Placa</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Modelo</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Chassi</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">RENAVAM</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Veículo</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Proposta</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Criação</th>
-              <th className="px-4 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {loading && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[800px]">
+            <thead className="bg-gray-50 border-b border-gray-100">
               <tr>
-                <td colSpan={10} className="text-center py-8 text-gray-400">
-                  <Loader2 size={18} className="inline animate-spin mr-2" />
-                  Carregando...
-                </td>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Usuário</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Proprietário</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Placa</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Modelo</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Chassi</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">RENAVAM</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Veículo</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Proposta</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600">Criação</th>
+                <th className="px-4 py-3" />
               </tr>
-            )}
-            {!loading && result?.items.map((p) => (
-              <tr
-                key={p.id_proposta}
-                onClick={() => navigate(`/propostas/${p.id_proposta}`)}
-                className="border-b border-gray-50 hover:bg-blue-50 cursor-pointer"
-              >
-                <td className="px-4 py-3 text-gray-700">{p.nomeUsuario}</td>
-                <td className="px-4 py-3 text-gray-700">{p.nomeProprietario}</td>
-                <td className="px-4 py-3 font-mono text-gray-900">{p.placa}</td>
-                <td className="px-4 py-3 text-gray-700">{p.marca} {p.modelo}</td>
-                <td className="px-4 py-3 font-mono text-gray-600 text-xs">{p.chassi || '—'}</td>
-                <td className="px-4 py-3 font-mono text-gray-600">{p.renavam || '—'}</td>
-                <td className="px-4 py-3"><StatusBadge status={p.statusVeiculo} /></td>
-                <td className="px-4 py-3"><StatusBadge status={p.statusProposta} /></td>
-                <td className="px-4 py-3 text-gray-500">{new Date(p.dataCriacao).toLocaleDateString('pt-BR')}</td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2 justify-end">
-                    <button
-                      onClick={(e) => handleAbrirEdicao(e, p.id_veiculo)}
-                      title="Editar veículo"
-                      className="p-1.5 rounded-md text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                    >
-                      <Pencil size={14} />
-                    </button>
-                    <ChevronRight size={15} className="text-gray-300" />
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {!loading && !erro && result?.items.length === 0 && (
-              <tr>
-                <td colSpan={10} className="text-center py-8 text-gray-400">
-                  Nenhuma proposta encontrada.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {loading && (
+                <tr>
+                  <td colSpan={10} className="text-center py-8 text-gray-400">
+                    <Loader2 size={18} className="inline animate-spin mr-2" />
+                    Carregando...
+                  </td>
+                </tr>
+              )}
+              {!loading && result?.items.map((p) => (
+                <tr
+                  key={p.id_proposta}
+                  onClick={() => navigate(`/propostas/${p.id_proposta}`)}
+                  className="border-b border-gray-50 hover:bg-blue-50 cursor-pointer"
+                >
+                  <td className="px-4 py-3 text-gray-700">{p.nomeUsuario}</td>
+                  <td className="px-4 py-3 text-gray-700">{p.nomeProprietario}</td>
+                  <td className="px-4 py-3 font-mono text-gray-900">{p.placa}</td>
+                  <td className="px-4 py-3 text-gray-700">{p.marca} {p.modelo}</td>
+                  <td className="px-4 py-3 font-mono text-gray-600 text-xs">{p.chassi || '—'}</td>
+                  <td className="px-4 py-3 font-mono text-gray-600">{p.renavam || '—'}</td>
+                  <td className="px-4 py-3"><StatusBadge status={p.statusVeiculo} /></td>
+                  <td className="px-4 py-3"><StatusBadge status={p.statusProposta} /></td>
+                  <td className="px-4 py-3 text-gray-500">{new Date(p.dataCriacao).toLocaleDateString('pt-BR')}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-2 justify-end">
+                      <button
+                        onClick={(e) => handleAbrirEdicao(e, p.id_veiculo)}
+                        title="Editar veículo"
+                        className="p-1.5 rounded-md text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      <ChevronRight size={15} className="text-gray-300" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+              {!loading && !erro && result?.items.length === 0 && (
+                <tr>
+                  <td colSpan={10} className="text-center py-8 text-gray-400">
+                    Nenhuma proposta encontrada.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {result && (
         <Pagination page={page} totalPages={result.totalPages} onPageChange={setPage} />
       )}
 
-      {/* Modal de edição de veículo */}
       {modalAberto && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg mx-4">

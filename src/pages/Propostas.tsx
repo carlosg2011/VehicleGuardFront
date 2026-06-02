@@ -140,7 +140,8 @@ export default function Propostas() {
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[560px]">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
               <th className="text-left px-4 py-3 font-medium text-gray-600">Código</th>
@@ -180,6 +181,7 @@ export default function Propostas() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
 
       {result && <Pagination page={page} totalPages={result.totalPages} onPageChange={setPage} />}
@@ -189,7 +191,7 @@ export default function Propostas() {
           <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="space-y-5">
             <div>
               <SectionTitle>Proprietário</SectionTitle>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Field label="Nome" error={createForm.formState.errors.propNome?.message}>
                   <input {...createForm.register('propNome', { required: 'Obrigatório' })} className={inputCls} placeholder="Nome completo" />
                 </Field>
@@ -207,7 +209,7 @@ export default function Propostas() {
 
             <div>
               <SectionTitle>Veículo</SectionTitle>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <Field label="Placa" error={createForm.formState.errors.veicPlaca?.message}>
                   <input
                     {...createForm.register('veicPlaca', { required: 'Obrigatório', setValueAs: (v: string) => v.toUpperCase() })}
