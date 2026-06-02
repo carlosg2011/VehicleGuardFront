@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 import Login from './pages/Login';
@@ -14,6 +14,12 @@ import Termos from './pages/Termos';
 import TermoDetalhe from './pages/TermoDetalhe';
 import PropostasAdmin from './pages/PropostasAdmin';
 import Relatorios from './pages/Relatorios';
+import type { ReactNode } from 'react';
+
+function AdminRoute({ children }: { children: ReactNode }) {
+  const { isAdmin } = useAuth();
+  return isAdmin ? <>{children}</> : <Navigate to="/" replace />;
+}
 
 export default function App() {
   return (
@@ -38,7 +44,7 @@ export default function App() {
             <Route path="termos" element={<Termos />} />
             <Route path="termos/:id" element={<TermoDetalhe />} />
             <Route path="propostas-admin" element={<PropostasAdmin />} />
-            <Route path="relatorios" element={<Relatorios />} />
+            <Route path="relatorios" element={<AdminRoute><Relatorios /></AdminRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

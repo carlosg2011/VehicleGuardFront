@@ -17,7 +17,7 @@ const allNavItems = [
   { to: '/propostas', label: 'Propostas', icon: FileText, adminOnly: false },
   { to: '/vistorias', label: 'Vistorias', icon: ClipboardCheck, adminOnly: false },
   { to: '/termos', label: 'Termos Assinados', icon: ScrollText, adminOnly: false },
-  { to: '/relatorios', label: 'Relatórios', icon: BarChart3, adminOnly: false },
+  { to: '/relatorios', label: 'Relatórios', icon: BarChart3, adminOnly: true },
   { to: '/propostas-admin', label: 'Consulta Geral', icon: Search, adminOnly: true },
   { to: '/usuarios', label: 'Usuários', icon: Users, adminOnly: true },
 ];
