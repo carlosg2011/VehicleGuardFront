@@ -84,8 +84,13 @@ export default function Login() {
     try {
       await forgotPassword(forgotEmail);
       setForgotStep(2);
-    } catch {
-      setForgotError('Erro ao enviar o código. Tente novamente.');
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status;
+      if (status === 404) {
+        setForgotError('E-mail não encontrado. Verifique e tente novamente.');
+      } else {
+        setForgotError('Erro ao enviar o código. Tente novamente.');
+      }
     } finally {
       setForgotLoading(false);
     }
