@@ -25,35 +25,35 @@ function AdminRoute({ children }: { children: ReactNode }) {
 
 export default function App() {
   return (
-    <ThemeProvider>
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path="usuarios" element={<Usuarios />} />
-            <Route path="proprietarios" element={<Proprietarios />} />
-            <Route path="veiculos" element={<Veiculos />} />
-            <Route path="propostas" element={<Propostas />} />
-            <Route path="propostas/:id" element={<PropostaDetalhe />} />
-            <Route path="vistorias" element={<Vistorias />} />
-            <Route path="termos" element={<Termos />} />
-            <Route path="termos/:id" element={<TermoDetalhe />} />
-            <Route path="propostas-admin" element={<PropostasAdmin />} />
-            <Route path="relatorios" element={<AdminRoute><Relatorios /></AdminRoute>} />
-            <Route path="perfil" element={<Perfil />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <ThemeProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              element={
+                <ProtectedRoute>
+                  <Layout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="usuarios" element={<Usuarios />} />
+              <Route path="proprietarios" element={<Proprietarios />} />
+              <Route path="veiculos" element={<Veiculos />} />
+              <Route path="propostas" element={<Propostas />} />
+              <Route path="propostas/:id" element={<PropostaDetalhe />} />
+              <Route path="vistorias" element={<Vistorias />} />
+              <Route path="termos" element={<Termos />} />
+              <Route path="termos/:id" element={<TermoDetalhe />} />
+              <Route path="propostas-admin" element={<PropostasAdmin />} />
+              <Route path="relatorios" element={<AdminRoute><Relatorios /></AdminRoute>} />
+              <Route path="perfil" element={<Perfil />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
     </AuthProvider>
-    </ThemeProvider>
   );
 }
