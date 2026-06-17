@@ -172,163 +172,50 @@ export default function Vistorias() {
     ? ['Aprovada', 'Recusada', 'Cancelada', 'Expirada'].includes(inspectTarget.status)
     : false;
 
-  /* ── Tela de inspeção (full-screen) ─────────────────────────────── */
+  /* ── Tela de inspeção (página rolável) ─────────────────────────── */
   if (inspectTarget) {
     return (
-      <div className="flex flex-col h-full min-h-screen bg-gray-50 -m-4 md:-m-8">
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-100 shadow-sm sticky top-0 z-10">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setInspectTarget(null)}
-              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition"
-            >
-              <ArrowLeft size={16} /> Voltar
-            </button>
-            <span className="text-gray-300">|</span>
-            <h1 className="text-base font-semibold text-gray-900">Vistoria #{inspectTarget.id_vistoria}</h1>
-            <StatusBadge status={inspectTarget.status} />
-          </div>
-          <div className="hidden sm:flex items-center gap-3 text-sm text-gray-600">
-            <span><strong className="text-gray-800">{inspectTarget.nomeProprietario}</strong></span>
+      <div className="flex flex-col min-h-screen bg-gray-50 -m-4 md:-m-8">
+        {/* Header sticky */}
+        <div className="sticky top-0 z-10 flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 bg-white border-b border-gray-100 shadow-sm">
+          <button
+            onClick={() => setInspectTarget(null)}
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors shrink-0"
+          >
+            <ArrowLeft size={16} /> Voltar
+          </button>
+          <span className="text-gray-300">|</span>
+          <h1 className="text-sm md:text-base font-semibold text-gray-900 truncate">
+            Vistoria #{inspectTarget.id_vistoria}
+          </h1>
+          <StatusBadge status={inspectTarget.status} />
+          <div className="ml-auto hidden sm:flex items-center gap-2 text-sm text-gray-600 shrink-0">
+            <strong className="text-gray-800">{inspectTarget.nomeProprietario}</strong>
             <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-700">{inspectTarget.placa}</span>
             <span className="hidden md:inline text-gray-400">{inspectTarget.sessaoProposta}</span>
           </div>
         </div>
 
-        {/* Body */}
-        <div className="flex-1 flex flex-col md:flex-row overflow-y-auto md:overflow-hidden">
-          {/* Fotos — painel principal */}
-          <div className="flex-1 overflow-y-auto p-4 md:p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-gray-800">
-                Fotos da Vistoria
-                <span className={`ml-2 text-sm font-normal ${filledCount === 14 ? 'text-green-600' : 'text-gray-400'}`}>
-                  ({filledCount}/14)
-                </span>
-              </h2>
-              {/* Barra de progresso */}
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <div className="w-32 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all ${filledCount === 14 ? 'bg-green-500' : 'bg-blue-500'}`}
-                    style={{ width: `${(filledCount / 14) * 100}%` }}
-                  />
-                </div>
-                {filledCount}/14
-              </div>
-            </div>
+        {/* Conteúdo rolável */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {SLOTS.map((slot) => {
-                const url = slotUrl(slot);
-                const verdict = verdicts[slot];
-                const isUploading = uploading[slot];
-                const err = uploadError[slot];
-                return (
-                  <div
-                    key={slot}
-                    className={`border-2 rounded-xl overflow-hidden bg-white transition shadow-sm ${
-                      verdict === 'approved' ? 'border-green-400' :
-                      verdict === 'rejected' ? 'border-red-400' :
-                      url ? 'border-blue-300' : 'border-gray-200'
-                    }`}
-                  >
-                    {url ? (
-                      <>
-                        <div className="relative group">
-                          <img src={url} alt={slot} className="w-full h-40 object-cover" />
-                          <button
-                            type="button"
-                            onClick={() => setLightbox(url)}
-                            className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-t-xl"
-                          >
-                            <ZoomIn size={24} className="text-white" />
-                          </button>
-                        </div>
-                        <div className="p-2">
-                          <p className="text-xs text-gray-600 font-medium truncate mb-2">{slot}</p>
-                          {!isClosed && (
-                            <div className="flex gap-1">
-                              <button type="button" onClick={() => handleVerdict(slot, 'approved')}
-                                title="Aprovar foto"
-                                className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium transition ${
-                                  verdict === 'approved' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-green-50 hover:text-green-600'
-                                }`}>
-                                <Check size={13} />
-                              </button>
-                              <button type="button" onClick={() => handleVerdict(slot, 'rejected')}
-                                title="Reprovar foto"
-                                className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium transition ${
-                                  verdict === 'rejected' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-600'
-                                }`}>
-                                <X size={13} />
-                              </button>
-                              <button type="button" onClick={() => fileRefs.current[slot]?.click()}
-                                title="Trocar foto"
-                                className="flex-1 flex items-center justify-center py-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition">
-                                <Upload size={13} />
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <button
-                        type="button"
-                        disabled={isClosed || isUploading}
-                        onClick={() => fileRefs.current[slot]?.click()}
-                        className="w-full flex flex-col items-center justify-center gap-2 py-10 text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isUploading ? (
-                          <span className="text-xs animate-pulse">Enviando...</span>
-                        ) : (
-                          <>
-                            <Upload size={20} />
-                            <span className="text-xs font-medium text-center px-2">{slot}</span>
-                            {err && (
-                              <span className="text-xs text-red-500 flex items-center gap-1">
-                                <AlertTriangle size={11} /> {err}
-                              </span>
-                            )}
-                          </>
-                        )}
-                      </button>
-                    )}
-                    <input
-                      ref={(el) => { fileRefs.current[slot] = el; }}
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) handleSlotUpload(slot, file);
-                        e.target.value = '';
-                      }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Painel lateral direito */}
-          <div className="md:w-72 xl:w-80 border-t md:border-t-0 md:border-l border-gray-100 bg-white flex flex-col md:overflow-y-auto">
-            <div className="flex-1 p-5 space-y-5">
+            {/* Cards de info */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Detalhes */}
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Detalhes</p>
-                <dl className="text-sm space-y-1.5">
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">Detalhes</p>
+                <dl className="text-sm space-y-2">
                   <div className="flex justify-between">
                     <dt className="text-gray-500">Solicitação</dt>
-                    <dd className="text-gray-800 font-medium">
+                    <dd className="font-medium text-gray-800">
                       {new Date(inspectTarget.dataSolicitacao).toLocaleDateString('pt-BR')}
                     </dd>
                   </div>
                   {inspectTarget.dataInicio && (
                     <div className="flex justify-between">
                       <dt className="text-gray-500">Início</dt>
-                      <dd className="text-gray-800 font-medium">
+                      <dd className="font-medium text-gray-800">
                         {new Date(inspectTarget.dataInicio).toLocaleDateString('pt-BR')}
                       </dd>
                     </div>
@@ -336,7 +223,7 @@ export default function Vistorias() {
                   {inspectTarget.dataConclusao && (
                     <div className="flex justify-between">
                       <dt className="text-gray-500">Conclusão</dt>
-                      <dd className="text-gray-800 font-medium">
+                      <dd className="font-medium text-gray-800">
                         {new Date(inspectTarget.dataConclusao).toLocaleDateString('pt-BR')}
                       </dd>
                     </div>
@@ -344,25 +231,25 @@ export default function Vistorias() {
                 </dl>
               </div>
 
-              {/* Resumo de aprovações */}
+              {/* Análise */}
               {filledCount > 0 && (
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Análise</p>
+                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">Análise</p>
                   <div className="flex gap-2">
-                    <div className="flex-1 bg-green-50 rounded-lg p-2 text-center">
-                      <p className="text-lg font-bold text-green-600">
+                    <div className="flex-1 bg-green-50 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-green-600">
                         {Object.values(verdicts).filter((v) => v === 'approved').length}
                       </p>
                       <p className="text-xs text-green-700">Aprovadas</p>
                     </div>
-                    <div className="flex-1 bg-red-50 rounded-lg p-2 text-center">
-                      <p className="text-lg font-bold text-red-600">
+                    <div className="flex-1 bg-red-50 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-red-600">
                         {Object.values(verdicts).filter((v) => v === 'rejected').length}
                       </p>
                       <p className="text-xs text-red-700">Reprovadas</p>
                     </div>
-                    <div className="flex-1 bg-gray-50 rounded-lg p-2 text-center">
-                      <p className="text-lg font-bold text-gray-600">
+                    <div className="flex-1 bg-gray-50 rounded-lg p-3 text-center">
+                      <p className="text-xl font-bold text-gray-600">
                         {filledCount - Object.values(verdicts).filter((v) => v !== null).length}
                       </p>
                       <p className="text-xs text-gray-500">Pendentes</p>
@@ -372,55 +259,173 @@ export default function Vistorias() {
               )}
 
               {/* Observações */}
-              <div>
-                <label className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2 block">
+              <div className={`bg-white rounded-xl border border-gray-100 shadow-sm p-4 ${filledCount === 0 ? 'sm:col-span-2 lg:col-span-2' : ''}`}>
+                <label className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3 block">
                   Observações
                 </label>
                 {isClosed ? (
-                  <p className="text-sm text-gray-700 bg-gray-50 rounded-lg p-3 min-h-[80px]">
+                  <p className="text-sm text-gray-700 min-h-[60px]">
                     {inspectTarget.observacoes || <span className="text-gray-400 italic">Nenhuma observação.</span>}
                   </p>
                 ) : (
                   <textarea
                     value={observacoes}
                     onChange={(e) => setObservacoes(e.target.value)}
-                    rows={5}
+                    rows={3}
                     maxLength={1000}
                     placeholder="Anotações sobre o estado do veículo, itens verificados, pendências..."
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition resize-none"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-colors resize-none"
                   />
                 )}
               </div>
             </div>
 
-            {/* Ações */}
-            {!isClosed && (
-              <div className="p-5 border-t border-gray-100 space-y-2">
-                {actionError && (
-                  <p className="text-xs text-red-600 bg-red-50 rounded px-3 py-2 flex items-start gap-1.5">
-                    <AlertTriangle size={13} className="mt-0.5 shrink-0" /> {actionError}
-                  </p>
-                )}
-                <button
-                  type="button"
-                  disabled={saving}
-                  onClick={() => handleAction('Aprovada')}
-                  className="w-full py-2.5 text-sm font-medium rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-60 transition"
-                >
-                  {saving ? 'Salvando...' : `Aprovar Vistoria (${filledCount}/14)`}
-                </button>
+            {/* Fotos */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-semibold text-gray-800">
+                  Fotos da Vistoria
+                  <span className={`ml-2 text-sm font-normal ${filledCount === 14 ? 'text-green-600' : 'text-gray-400'}`}>
+                    ({filledCount}/14)
+                  </span>
+                </h2>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="w-32 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all ${filledCount === 14 ? 'bg-green-500' : 'bg-blue-500'}`}
+                      style={{ width: `${(filledCount / 14) * 100}%` }}
+                    />
+                  </div>
+                  {filledCount}/14
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {SLOTS.map((slot) => {
+                  const url = slotUrl(slot);
+                  const verdict = verdicts[slot];
+                  const isUploading = uploading[slot];
+                  const err = uploadError[slot];
+                  return (
+                    <div
+                      key={slot}
+                      className={`border-2 rounded-xl overflow-hidden bg-white transition-colors shadow-sm ${
+                        verdict === 'approved' ? 'border-green-400' :
+                        verdict === 'rejected' ? 'border-red-400' :
+                        url ? 'border-blue-300' : 'border-gray-200'
+                      }`}
+                    >
+                      {url ? (
+                        <>
+                          <div className="relative group">
+                            <img src={url} alt={slot} className="w-full aspect-[4/3] object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => setLightbox(url)}
+                              className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-t-xl"
+                            >
+                              <ZoomIn size={24} className="text-white" />
+                            </button>
+                          </div>
+                          <div className="p-2">
+                            <p className="text-xs text-gray-600 font-medium truncate mb-2">{slot}</p>
+                            {!isClosed && (
+                              <div className="flex gap-1">
+                                <button type="button" onClick={() => handleVerdict(slot, 'approved')}
+                                  title="Aprovar foto"
+                                  className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                    verdict === 'approved' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-green-50 hover:text-green-600'
+                                  }`}>
+                                  <Check size={13} />
+                                </button>
+                                <button type="button" onClick={() => handleVerdict(slot, 'rejected')}
+                                  title="Reprovar foto"
+                                  className={`flex-1 flex items-center justify-center py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                                    verdict === 'rejected' ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-red-50 hover:text-red-600'
+                                  }`}>
+                                  <X size={13} />
+                                </button>
+                                <button type="button" onClick={() => fileRefs.current[slot]?.click()}
+                                  title="Trocar foto"
+                                  className="flex-1 flex items-center justify-center py-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                  <Upload size={13} />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={isClosed || isUploading}
+                          onClick={() => fileRefs.current[slot]?.click()}
+                          className="w-full aspect-[4/3] flex flex-col items-center justify-center gap-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isUploading ? (
+                            <span className="text-xs animate-pulse">Enviando...</span>
+                          ) : (
+                            <>
+                              <Upload size={20} />
+                              <span className="text-xs font-medium text-center px-2">{slot}</span>
+                              {err && (
+                                <span className="text-xs text-red-500 flex items-center gap-1">
+                                  <AlertTriangle size={11} /> {err}
+                                </span>
+                              )}
+                            </>
+                          )}
+                        </button>
+                      )}
+                      <input
+                        ref={(el) => { fileRefs.current[slot] = el; }}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleSlotUpload(slot, file);
+                          e.target.value = '';
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Barra de ações sticky no rodapé */}
+        {!isClosed && (
+          <div className="sticky bottom-0 z-10 bg-white border-t border-gray-100 shadow-lg">
+            <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              {actionError && (
+                <p className="text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2 flex items-center gap-1.5">
+                  <AlertTriangle size={13} className="shrink-0" /> {actionError}
+                </p>
+              )}
+              <div className="flex gap-3 sm:ml-auto">
                 <button
                   type="button"
                   disabled={saving}
                   onClick={() => handleAction('Recusada')}
-                  className="w-full py-2.5 text-sm font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-60 transition"
+                  className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-medium rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-60 transition-colors"
                 >
-                  {saving ? 'Salvando...' : 'Recusar Vistoria'}
+                  {saving ? 'Salvando...' : 'Recusar'}
+                </button>
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() => handleAction('Aprovada')}
+                  className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-medium rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-60 transition-colors"
+                >
+                  {saving ? 'Salvando...' : `Aprovar (${filledCount}/14)`}
                 </button>
               </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Lightbox */}
         {lightbox && (
@@ -434,7 +439,7 @@ export default function Vistorias() {
               className="max-w-full max-h-full rounded-xl shadow-2xl object-contain"
               onClick={(e) => e.stopPropagation()}
             />
-            <button onClick={() => setLightbox(null)} className="absolute top-5 right-5 text-white/80 hover:text-white">
+            <button onClick={() => setLightbox(null)} className="absolute top-5 right-5 text-white/80 hover:text-white transition-colors">
               <X size={30} />
             </button>
           </div>
