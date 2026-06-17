@@ -20,3 +20,12 @@ export const updateUsuario = (
 ) => api.put<Usuario>(`/usuarios/${id}`, data).then((r) => r.data);
 
 export const deleteUsuario = (id: number) => api.delete(`/usuarios/${id}`);
+
+export const updatePerfil = (data: { nome: string; email: string }) =>
+  api.put<{ usuario: { id_usuario: number; nome: string; email: string; role: string }; token: string }>(
+    '/perfil',
+    data
+  ).then((r) => r.data);
+
+export const changePassword = (data: { senhaAtual: string; novaSenha: string }) =>
+  api.post('/perfil/change-password', data);

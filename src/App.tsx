@@ -14,6 +14,7 @@ import Termos from './pages/Termos';
 import TermoDetalhe from './pages/TermoDetalhe';
 import PropostasAdmin from './pages/PropostasAdmin';
 import Relatorios from './pages/Relatorios';
+import Perfil from './pages/Perfil';
 import type { ReactNode } from 'react';
 
 function AdminRoute({ children }: { children: ReactNode }) {
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="termos/:id" element={<TermoDetalhe />} />
             <Route path="propostas-admin" element={<PropostasAdmin />} />
             <Route path="relatorios" element={<AdminRoute><Relatorios /></AdminRoute>} />
+            <Route path="perfil" element={<Perfil />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>
         </Routes>

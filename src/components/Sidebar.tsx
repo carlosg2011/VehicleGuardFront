@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Users,
@@ -30,6 +30,7 @@ interface SidebarProps {
 
 export default function Sidebar({ open, onClose }: SidebarProps) {
   const { user, signOut, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const navItems = allNavItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
@@ -76,15 +77,18 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
       </nav>
 
       <div className="px-4 py-4 border-t border-gray-700">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm font-bold uppercase">
+        <button
+          onClick={() => { navigate('/perfil'); onClose(); }}
+          className="w-full flex items-center gap-3 mb-3 p-2 rounded-lg hover:bg-gray-800 transition-colors text-left"
+        >
+          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-sm font-bold uppercase shrink-0">
             {user?.nome?.[0]}
           </div>
           <div className="min-w-0">
             <p className="text-sm font-medium truncate">{user?.nome}</p>
             <p className="text-xs text-gray-400 truncate">{user?.role}</p>
           </div>
-        </div>
+        </button>
         <button
           onClick={signOut}
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
