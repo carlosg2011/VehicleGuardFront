@@ -259,13 +259,13 @@ export default function Vistorias() {
               )}
 
               {/* Observações */}
-              <div className={`bg-white rounded-xl border border-gray-100 shadow-sm p-4 ${filledCount === 0 ? 'sm:col-span-2 lg:col-span-2' : ''}`}>
-                <label className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3 block">
+              <div className={`bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4 ${filledCount === 0 ? 'sm:col-span-2 lg:col-span-2' : ''}`}>
+                <label className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-3 block">
                   Observações
                 </label>
                 {isClosed ? (
-                  <p className="text-sm text-gray-700 min-h-[60px]">
-                    {inspectTarget.observacoes || <span className="text-gray-400 italic">Nenhuma observação.</span>}
+                  <p className="text-sm text-gray-700 dark:text-gray-200 min-h-[60px]">
+                    {inspectTarget.observacoes || <span className="text-gray-400 dark:text-gray-500 italic">Nenhuma observação.</span>}
                   </p>
                 ) : (
                   <textarea
