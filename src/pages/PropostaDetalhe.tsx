@@ -14,8 +14,8 @@ import { useAuth } from '../contexts/AuthContext';
 function InfoRow({ label, value }: { label: string; value?: string | number | null }) {
   return (
     <div>
-      <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-      <p className="text-sm font-medium text-gray-900">{value ?? '—'}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{label}</p>
+      <p className="text-sm font-medium text-gray-900 dark:text-white">{value ?? '—'}</p>
     </div>
   );
 }
@@ -144,7 +144,7 @@ export default function PropostaDetalhe() {
       <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
         <button
           onClick={() => navigate('/propostas')}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition"
+          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -190,17 +190,17 @@ export default function PropostaDetalhe() {
 
       <div className="mb-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-gray-900">{proposta.sessaoProposta}</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">{proposta.sessaoProposta}</h1>
           <StatusBadge status={proposta.status} />
         </div>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
           Criado em {new Date(proposta.dataCriacao).toLocaleDateString('pt-BR')} · Proposta #{proposta.id_proposta}
         </p>
       </div>
 
       <div className="space-y-4">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proprietário</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Proprietário</h2>
           {proprietario ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <InfoRow label="Nome" value={proprietario.nome} />
@@ -213,8 +213,8 @@ export default function PropostaDetalhe() {
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-          <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Veículo</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Veículo</h2>
           {veiculo ? (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="Placa" value={veiculo.placa} />
@@ -235,15 +235,15 @@ export default function PropostaDetalhe() {
 
       {confirmModal && (
         <Modal title="Criar Vistoria" onClose={() => setConfirmModal(false)}>
-          <p className="text-gray-600 mb-2">
+          <p className="text-gray-600 dark:text-gray-300 mb-2">
             Deseja criar uma vistoria para a proposta <strong>{proposta.sessaoProposta}</strong>?
           </p>
-          <p className="text-xs text-gray-400 mb-6">
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
             A data e hora de solicitação serão registradas automaticamente.
           </p>
           {error && <p className="text-sm text-red-600 bg-red-50 rounded px-3 py-2 mb-4">{error}</p>}
           <div className="flex gap-2 justify-end">
-            <button type="button" onClick={() => setConfirmModal(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">Cancelar</button>
+            <button type="button" onClick={() => setConfirmModal(false)} className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200">Cancelar</button>
             <button onClick={handleCriarVistoria} disabled={submitting} className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60">
               {submitting ? 'Criando...' : 'Confirmar'}
             </button>

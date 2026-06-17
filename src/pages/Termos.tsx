@@ -29,19 +29,19 @@ export default function Termos() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Termos</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Termos</h1>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[520px]">
-          <thead className="bg-gray-50 border-b border-gray-100">
+          <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Número</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Envio</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Assinatura</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Proposta</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Número</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Status</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Envio</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Assinatura</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Proposta</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
@@ -54,16 +54,16 @@ export default function Termos() {
               <tr
                 key={t.id_termo}
                 onClick={() => navigate(`/termos/${t.id_termo}`)}
-                className="border-b border-gray-50 hover:bg-blue-50 cursor-pointer"
+                className="border-b border-gray-50 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer"
               >
-                <td className="px-4 py-3 font-mono font-medium text-gray-900">{t.numeroTermo}</td>
+                <td className="px-4 py-3 font-mono font-medium text-gray-900 dark:text-white">{t.numeroTermo}</td>
                 <td className="px-4 py-3"><StatusBadge status={t.status} /></td>
-                <td className="px-4 py-3 text-gray-600">{new Date(t.dataEnvio).toLocaleDateString('pt-BR')}</td>
-                <td className="px-4 py-3 text-gray-600">{t.dataAssinatura ? new Date(t.dataAssinatura).toLocaleDateString('pt-BR') : '—'}</td>
-                <td className="px-4 py-3 text-gray-600">#{t.id_proposta}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{new Date(t.dataEnvio).toLocaleDateString('pt-BR')}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{t.dataAssinatura ? new Date(t.dataAssinatura).toLocaleDateString('pt-BR') : '—'}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">#{t.id_proposta}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end">
-                    <ChevronRight size={15} className="text-gray-300 pointer-events-none" />
+                    <ChevronRight size={15} className="text-gray-300 dark:text-gray-600 pointer-events-none" />
                   </div>
                 </td>
               </tr>

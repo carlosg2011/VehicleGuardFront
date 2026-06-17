@@ -13,8 +13,8 @@ import { useAuth } from '../contexts/AuthContext';
 function InfoRow({ label, value }: { label: string; value?: string | number | null }) {
   return (
     <div>
-      <p className="text-xs text-gray-500 mb-0.5">{label}</p>
-      <p className="text-sm font-medium text-gray-900">{value ?? '—'}</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{label}</p>
+      <p className="text-sm font-medium text-gray-900 dark:text-white">{value ?? '—'}</p>
     </div>
   );
 }
@@ -133,7 +133,7 @@ export default function TermoDetalhe() {
       <div className="flex flex-wrap items-center justify-between gap-2 mb-6">
         <button
           onClick={() => navigate('/termos')}
-          className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition"
+          className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition"
         >
           <ArrowLeft size={16} />
           Voltar
@@ -151,10 +151,10 @@ export default function TermoDetalhe() {
 
       <div className="mb-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-gray-900 font-mono">{termo.numeroTermo}</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white font-mono">{termo.numeroTermo}</h1>
           <StatusBadge status={termo.status} />
         </div>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
           Enviado em {new Date(termo.dataEnvio).toLocaleDateString('pt-BR')}
           {termo.dataAssinatura && ` · Assinado em ${new Date(termo.dataAssinatura).toLocaleDateString('pt-BR')}`}
         </p>
@@ -162,8 +162,8 @@ export default function TermoDetalhe() {
 
       <div className="space-y-4">
         {proposta && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proposta</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Proposta</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="Código" value={proposta.sessaoProposta} />
               <InfoRow label="Status" value={proposta.status} />
@@ -173,8 +173,8 @@ export default function TermoDetalhe() {
         )}
 
         {proprietario && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Proprietário</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Proprietário</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <InfoRow label="Nome" value={proprietario.nome} />
               <InfoRow label="CPF / CNPJ" value={proprietario.cpf} />
@@ -185,8 +185,8 @@ export default function TermoDetalhe() {
         )}
 
         {veiculo && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Veículo</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Veículo</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="Placa" value={veiculo.placa} />
               <InfoRow label="Marca" value={veiculo.marca} />
@@ -202,8 +202,8 @@ export default function TermoDetalhe() {
         )}
 
         {vistoria && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Vistoria</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Vistoria</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               <InfoRow label="ID" value={`#${vistoria.id_vistoria}`} />
               <InfoRow label="Status" value={vistoria.status} />
@@ -215,8 +215,8 @@ export default function TermoDetalhe() {
         )}
 
         {mostrarAssinaturas && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-            <h2 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">Assinaturas</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 uppercase tracking-wide">Assinaturas</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <SignatureCard
                 title="Proprietário"

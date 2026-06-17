@@ -175,24 +175,24 @@ export default function Vistorias() {
   /* ── Tela de inspeção (página rolável) ─────────────────────────── */
   if (inspectTarget) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50 -m-4 md:-m-8">
+      <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 -m-4 md:-m-8">
         {/* Header sticky */}
-        <div className="sticky top-0 z-10 flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 bg-white border-b border-gray-100 shadow-sm">
+        <div className="sticky top-0 z-10 flex items-center gap-2 md:gap-3 px-4 md:px-6 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-sm">
           <button
             onClick={() => setInspectTarget(null)}
-            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors shrink-0"
+            className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white transition-colors shrink-0"
           >
             <ArrowLeft size={16} /> Voltar
           </button>
           <span className="text-gray-300">|</span>
-          <h1 className="text-sm md:text-base font-semibold text-gray-900 truncate">
+          <h1 className="text-sm md:text-base font-semibold text-gray-900 dark:text-white truncate">
             Vistoria #{inspectTarget.id_vistoria}
           </h1>
           <StatusBadge status={inspectTarget.status} />
-          <div className="ml-auto hidden sm:flex items-center gap-2 text-sm text-gray-600 shrink-0">
-            <strong className="text-gray-800">{inspectTarget.nomeProprietario}</strong>
-            <span className="font-mono bg-gray-100 px-2 py-0.5 rounded text-gray-700">{inspectTarget.placa}</span>
-            <span className="hidden md:inline text-gray-400">{inspectTarget.sessaoProposta}</span>
+          <div className="ml-auto hidden sm:flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 shrink-0">
+            <strong className="text-gray-800 dark:text-white">{inspectTarget.nomeProprietario}</strong>
+            <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded text-gray-700 dark:text-gray-200">{inspectTarget.placa}</span>
+            <span className="hidden md:inline text-gray-400 dark:text-gray-500">{inspectTarget.sessaoProposta}</span>
           </div>
         </div>
 
@@ -203,27 +203,27 @@ export default function Vistorias() {
             {/* Cards de info */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Detalhes */}
-              <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">Detalhes</p>
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-3">Detalhes</p>
                 <dl className="text-sm space-y-2">
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Solicitação</dt>
-                    <dd className="font-medium text-gray-800">
+                    <dt className="text-gray-500 dark:text-gray-400">Solicitação</dt>
+                    <dd className="font-medium text-gray-800 dark:text-white">
                       {new Date(inspectTarget.dataSolicitacao).toLocaleDateString('pt-BR')}
                     </dd>
                   </div>
                   {inspectTarget.dataInicio && (
                     <div className="flex justify-between">
-                      <dt className="text-gray-500">Início</dt>
-                      <dd className="font-medium text-gray-800">
+                      <dt className="text-gray-500 dark:text-gray-400">Início</dt>
+                      <dd className="font-medium text-gray-800 dark:text-white">
                         {new Date(inspectTarget.dataInicio).toLocaleDateString('pt-BR')}
                       </dd>
                     </div>
                   )}
                   {inspectTarget.dataConclusao && (
                     <div className="flex justify-between">
-                      <dt className="text-gray-500">Conclusão</dt>
-                      <dd className="font-medium text-gray-800">
+                      <dt className="text-gray-500 dark:text-gray-400">Conclusão</dt>
+                      <dd className="font-medium text-gray-800 dark:text-white">
                         {new Date(inspectTarget.dataConclusao).toLocaleDateString('pt-BR')}
                       </dd>
                     </div>
@@ -233,8 +233,8 @@ export default function Vistorias() {
 
               {/* Análise */}
               {filledCount > 0 && (
-                <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-3">Análise</p>
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500 mb-3">Análise</p>
                   <div className="flex gap-2">
                     <div className="flex-1 bg-green-50 rounded-lg p-3 text-center">
                       <p className="text-xl font-bold text-green-600">
@@ -274,7 +274,7 @@ export default function Vistorias() {
                     rows={3}
                     maxLength={1000}
                     placeholder="Anotações sobre o estado do veículo, itens verificados, pendências..."
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-colors resize-none"
+                    className="w-full border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors resize-none"
                   />
                 )}
               </div>
@@ -283,7 +283,7 @@ export default function Vistorias() {
             {/* Fotos */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-800">
+                <h2 className="font-semibold text-gray-800 dark:text-white">
                   Fotos da Vistoria
                   <span className={`ml-2 text-sm font-normal ${filledCount === 14 ? 'text-green-600' : 'text-gray-400'}`}>
                     ({filledCount}/14)
@@ -309,7 +309,7 @@ export default function Vistorias() {
                   return (
                     <div
                       key={slot}
-                      className={`border-2 rounded-xl overflow-hidden bg-white transition-colors shadow-sm ${
+                      className={`border-2 rounded-xl overflow-hidden bg-white dark:bg-gray-800 transition-colors shadow-sm ${
                         verdict === 'approved' ? 'border-green-400' :
                         verdict === 'rejected' ? 'border-red-400' :
                         url ? 'border-blue-300' : 'border-gray-200'
@@ -328,7 +328,7 @@ export default function Vistorias() {
                             </button>
                           </div>
                           <div className="p-2">
-                            <p className="text-xs text-gray-600 font-medium truncate mb-2">{slot}</p>
+                            <p className="text-xs text-gray-600 dark:text-gray-300 font-medium truncate mb-2">{slot}</p>
                             {!isClosed && (
                               <div className="flex gap-1">
                                 <button type="button" onClick={() => handleVerdict(slot, 'approved')}
@@ -398,7 +398,7 @@ export default function Vistorias() {
 
         {/* Barra de ações sticky no rodapé */}
         {!isClosed && (
-          <div className="sticky bottom-0 z-10 bg-white border-t border-gray-100 shadow-lg">
+          <div className="sticky bottom-0 z-10 bg-white dark:bg-gray-800 border-t border-gray-100 dark:border-gray-700 shadow-lg">
             <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {actionError && (
                 <p className="text-xs text-red-600 bg-red-50 rounded-lg px-3 py-2 flex items-center gap-1.5">
@@ -452,12 +452,12 @@ export default function Vistorias() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Vistorias</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Vistorias</h1>
         <div className="relative">
           <select
             value={statusFilter}
             onChange={(e) => { setStatusFilter(e.target.value as StatusVistoria | ''); setPage(1); }}
-            className="appearance-none bg-white border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm text-gray-700 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 cursor-pointer"
+            className="appearance-none bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg pl-3 pr-8 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 cursor-pointer"
           >
             {STATUS_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
@@ -465,18 +465,18 @@ export default function Vistorias() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[640px]">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">ID</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Associado</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Placa</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Proposta</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Fotos</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Prazo (24h)</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">ID</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Status</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Associado</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Placa</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Proposta</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Fotos</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Prazo (24h)</th>
               </tr>
             </thead>
             <tbody>
@@ -489,12 +489,12 @@ export default function Vistorias() {
                 const expired = prazo === 'Expirado';
                 const done = prazo === '—';
                 return (
-                  <tr key={v.id_vistoria} onClick={() => openInspect(v)} className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors">
-                    <td className="px-4 py-3 text-gray-500">#{v.id_vistoria}</td>
+                  <tr key={v.id_vistoria} onClick={() => openInspect(v)} className="border-b border-gray-50 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors">
+                    <td className="px-4 py-3 text-gray-500 dark:text-gray-400">#{v.id_vistoria}</td>
                     <td className="px-4 py-3"><StatusBadge status={v.status} /></td>
-                    <td className="px-4 py-3 text-gray-800">{v.nomeProprietario || '—'}</td>
-                    <td className="px-4 py-3 font-mono text-gray-700">{v.placa || '—'}</td>
-                    <td className="px-4 py-3 font-mono text-gray-700">{v.sessaoProposta}</td>
+                    <td className="px-4 py-3 text-gray-800 dark:text-gray-200">{v.nomeProprietario || '—'}</td>
+                    <td className="px-4 py-3 font-mono text-gray-700 dark:text-gray-300">{v.placa || '—'}</td>
+                    <td className="px-4 py-3 font-mono text-gray-700 dark:text-gray-300">{v.sessaoProposta}</td>
                     <td className="px-4 py-3">
                       <span className={`text-xs font-medium ${v.fotos.length === 14 ? 'text-green-600' : 'text-gray-500'}`}>
                         {v.fotos.length}/14
