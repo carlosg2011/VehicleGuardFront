@@ -33,7 +33,7 @@ interface CreateForm {
 }
 
 const inputCls =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition';
+  'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition';
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
@@ -221,7 +221,7 @@ export default function Propostas() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Propostas</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Propostas</h1>
         <button
           onClick={openCreate}
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
@@ -230,16 +230,16 @@ export default function Propostas() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm min-w-[560px]">
-            <thead className="bg-gray-50 border-b border-gray-100">
+            <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Código</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Proprietário</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Veículo</th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">Criação</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Código</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Status</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Proprietário</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Veículo</th>
+                <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Criação</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
@@ -252,20 +252,20 @@ export default function Propostas() {
                 <tr
                   key={p.id_proposta}
                   onClick={() => navigate(`/propostas/${p.id_proposta}`)}
-                  className="border-b border-gray-50 hover:bg-blue-50 cursor-pointer transition-colors"
+                  className="border-b border-gray-50 dark:border-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer transition-colors"
                 >
-                  <td className="px-4 py-3 font-mono font-medium text-gray-900">{p.sessaoProposta}</td>
+                  <td className="px-4 py-3 font-mono font-medium text-gray-900 dark:text-white">{p.sessaoProposta}</td>
                   <td className="px-4 py-3"><StatusBadge status={p.status} /></td>
-                  <td className="px-4 py-3 text-gray-700">{proprietarioMap[p.id_proprietario]?.nome ?? `#${p.id_proprietario}`}</td>
-                  <td className="px-4 py-3 text-gray-700">
+                  <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{proprietarioMap[p.id_proprietario]?.nome ?? `#${p.id_proprietario}`}</td>
+                  <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
                     {veiculoMap[p.id_veiculo]
                       ? `${veiculoMap[p.id_veiculo].placa} — ${veiculoMap[p.id_veiculo].modelo}`
                       : `#${p.id_veiculo}`}
                   </td>
-                  <td className="px-4 py-3 text-gray-500">{new Date(p.dataCriacao).toLocaleDateString('pt-BR')}</td>
+                  <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{new Date(p.dataCriacao).toLocaleDateString('pt-BR')}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end">
-                      <ChevronRight size={15} className="text-gray-300 pointer-events-none" />
+                      <ChevronRight size={15} className="text-gray-300 dark:text-gray-600 pointer-events-none" />
                     </div>
                   </td>
                 </tr>

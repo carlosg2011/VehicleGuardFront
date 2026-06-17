@@ -7,7 +7,7 @@ export default function Layout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
       <div
         className={`fixed inset-0 z-20 bg-black/50 md:hidden transition-opacity duration-300 ease-in-out ${
           sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -18,7 +18,7 @@ export default function Layout() {
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="md:hidden sticky top-0 z-10 flex items-center gap-3 px-4 py-3 bg-gray-900 text-white">
+        <header className="md:hidden sticky top-0 z-10 flex items-center gap-3 px-4 py-3 bg-blue-800 text-white">
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-gray-300 hover:text-white transition-colors"
@@ -30,7 +30,7 @@ export default function Layout() {
         </header>
 
         <main className="flex-1 overflow-auto">
-          <div className="max-w-7xl mx-auto p-4 md:p-8">
+          <div className="max-w-7xl mx-auto p-4 md:p-8 dark:text-white">
             <Outlet />
           </div>
         </main>

@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { User, Lock, CheckCircle } from 'lucide-react';
+import { User, Lock, CheckCircle, Moon, Sun } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { updatePerfil, changePassword } from '../api/usuarios';
 
 const inputCls =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition';
+  'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition';
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
       {children}
       {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
     </div>
@@ -30,6 +31,7 @@ interface PasswordForm {
 
 export default function Perfil() {
   const { user, signIn } = useAuth();
+  const { darkMode, toggleDarkMode } = useTheme();
   const [profileSuccess, setProfileSuccess] = useState(false);
   const [profileError, setProfileError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState(false);
@@ -77,15 +79,15 @@ export default function Perfil() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-xl font-bold text-gray-900">Meu Perfil</h1>
+      <h1 className="text-xl font-bold text-gray-900 dark:text-white">Meu Perfil</h1>
 
       {/* Dados pessoais */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
         <div className="flex items-center gap-2 mb-5">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <User size={16} className="text-blue-600" />
+          <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+            <User size={16} className="text-blue-600 dark:text-blue-400" />
           </div>
-          <h2 className="text-base font-semibold text-gray-800">Dados Pessoais</h2>
+          <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100">Dados Pessoais</h2>
         </div>
 
         <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
@@ -107,11 +109,11 @@ export default function Perfil() {
           </Field>
 
           {profileError && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{profileError}</p>
+            <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg px-3 py-2">{profileError}</p>
           )}
 
           {profileSuccess && (
-            <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-lg px-3 py-2">
               <CheckCircle size={16} />
               Perfil atualizado com sucesso!
             </div>
@@ -130,12 +132,12 @@ export default function Perfil() {
       </div>
 
       {/* Alterar senha */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
         <div className="flex items-center gap-2 mb-5">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-            <Lock size={16} className="text-blue-600" />
+          <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+            <Lock size={16} className="text-blue-600 dark:text-blue-400" />
           </div>
-          <h2 className="text-base font-semibold text-gray-800">Alterar Senha</h2>
+          <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100">Alterar Senha</h2>
         </div>
 
         <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
@@ -173,11 +175,11 @@ export default function Perfil() {
           </Field>
 
           {passwordError && (
-            <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{passwordError}</p>
+            <p className="text-sm text-red-600 bg-red-50 dark:bg-red-900/20 rounded-lg px-3 py-2">{passwordError}</p>
           )}
 
           {passwordSuccess && (
-            <div className="flex items-center gap-2 text-sm text-green-700 bg-green-50 rounded-lg px-3 py-2">
+            <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 rounded-lg px-3 py-2">
               <CheckCircle size={16} />
               Senha alterada com sucesso!
             </div>
@@ -193,6 +195,40 @@ export default function Perfil() {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Aparência */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+        <div className="flex items-center gap-2 mb-5">
+          <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+            {darkMode ? (
+              <Moon size={16} className="text-blue-600 dark:text-blue-400" />
+            ) : (
+              <Sun size={16} className="text-blue-600 dark:text-blue-400" />
+            )}
+          </div>
+          <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100">Aparência</h2>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Modo Escuro</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Altera o tema do sistema para escuro</p>
+          </div>
+          <button
+            type="button"
+            onClick={toggleDarkMode}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+              darkMode ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+            }`}
+          >
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                darkMode ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
+          </button>
+        </div>
       </div>
     </div>
   );

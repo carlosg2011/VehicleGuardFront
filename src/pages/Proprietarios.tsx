@@ -20,7 +20,7 @@ interface FormData {
 }
 
 const inputCls =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition';
+  'w-full border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition';
 
 function Field({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
   return (
@@ -85,7 +85,7 @@ export default function Proprietarios() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-bold text-gray-900">Proprietários</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Proprietários</h1>
         <button
           onClick={openCreate}
           className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
@@ -94,25 +94,25 @@ export default function Proprietarios() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]">
-          <thead className="bg-gray-50 border-b border-gray-100">
+          <thead className="bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700">
             <tr>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Nome</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">CPF</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Telefone</th>
-              <th className="text-left px-4 py-3 font-medium text-gray-600">Email</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Nome</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">CPF</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Telefone</th>
+              <th className="text-left px-4 py-3 font-medium text-gray-600 dark:text-gray-300">Email</th>
               <th className="px-4 py-3" />
             </tr>
           </thead>
           <tbody>
             {result?.items.map((p) => (
-              <tr key={p.id_proprietario} className="border-b border-gray-50 hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-3 font-medium text-gray-900">{p.nome}</td>
-                <td className="px-4 py-3 text-gray-600">{p.cpf}</td>
-                <td className="px-4 py-3 text-gray-600">{p.telefone}</td>
-                <td className="px-4 py-3 text-gray-600">{p.email}</td>
+              <tr key={p.id_proprietario} className="border-b border-gray-50 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{p.nome}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{p.cpf}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{p.telefone}</td>
+                <td className="px-4 py-3 text-gray-600 dark:text-gray-300">{p.email}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-2">
                     <button onClick={() => openEdit(p)} className="text-gray-400 hover:text-blue-600 transition"><Pencil size={15} /></button>
@@ -148,7 +148,7 @@ export default function Proprietarios() {
             </Field>
             {error && <p className="text-sm text-red-600 bg-red-50 rounded px-3 py-2">{error}</p>}
             <div className="flex gap-2 justify-end pt-2">
-              <button type="button" onClick={() => setModal(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">Cancelar</button>
+              <button type="button" onClick={() => setModal(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200">Cancelar</button>
               <button type="submit" disabled={isSubmitting} className="px-4 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60">Salvar</button>
             </div>
           </form>
@@ -157,9 +157,9 @@ export default function Proprietarios() {
 
       {deleteTarget && (
         <Modal title="Confirmar exclusão" onClose={() => setDeleteTarget(null)}>
-          <p className="text-gray-600 mb-6">Deseja excluir o proprietário <strong>{deleteTarget.nome}</strong>?</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">Deseja excluir o proprietário <strong>{deleteTarget.nome}</strong>?</p>
           <div className="flex gap-2 justify-end">
-            <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50">Cancelar</button>
+            <button onClick={() => setDeleteTarget(null)} className="px-4 py-2 text-sm rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-200">Cancelar</button>
             <button onClick={confirmDelete} className="px-4 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700">Excluir</button>
           </div>
         </Modal>
