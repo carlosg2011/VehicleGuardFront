@@ -141,11 +141,18 @@ export default function Veiculos() {
             <div className="grid grid-cols-2 gap-4">
               <Field label="Placa" error={errors.placa?.message}>
                 <input
-                  {...register('placa', { required: 'Obrigatório', setValueAs: (v: string) => v.toUpperCase() })}
+                  {...register('placa', {
+                    required: 'Obrigatório',
+                    setValueAs: (v: string) => v.toUpperCase().replace(/-/g, ''),
+                    pattern: {
+                      value: /^[A-Z]{3}[0-9]{4}$|^[A-Z]{3}[0-9][A-Z][0-9]{2}$/,
+                      message: 'Formato inválido (ex: ABC1234 ou ABC1D23)',
+                    },
+                  })}
                   className={inputCls}
-                  placeholder="ABC-1234"
-                  maxLength={8}
-                  onInput={(e) => { (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.toUpperCase(); }}
+                  placeholder="ABC1234 ou ABC1D23"
+                  maxLength={7}
+                  onInput={(e) => { (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.toUpperCase().replace(/-/g, ''); }}
                 />
               </Field>
               <Field label="Status" error={errors.status?.message}>
